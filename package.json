@@ -1,7 +1,7 @@
 {
   "name": "react-native-wlkt",
   "version": "1.0.0",
-  "description": "A simple and fully customizable React Native component that that implements a walkthrough",
+  "description": "Simple and fully customizable walkthrough guide for your app",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,6 +10,10 @@
     "type": "git",
     "url": "git+https://github.com/blancham/react-native-wlkt.git"
   },
+  "bugs": {
+    "url": "https://github.com/blancham/react-native-wlkt/issues"
+  },
+  "homepage": "https://github.com/blancham/react-native-wlkt#readme",
   "keywords": [
     "react-native",
     "react-component",
@@ -27,9 +31,6 @@
   ],
   "author": "Maxime Blanchard",
   "license": "MIT",
-  "dependencies": {
-    "prop-types": "^15.6.1"
-  },
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/runtime": "^7.3.4",
@@ -46,7 +47,8 @@
     "react-test-renderer": "16.8.3"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-native": "*"
+    "prop-types": "^15.6.1",
+    "react": "^16.9.0",
+    "react-native": "^0.61.4"
   }
 }
