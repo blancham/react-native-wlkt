@@ -37,7 +37,11 @@ const WalkthroughTooltip = React.memo(props => {
       borderRadius,
       backgroundColor,
       fontSize,
-      content
+      content,
+      skipButtonText,
+      prevButtonText,
+      nextButtonText,
+      finishButtonText
     },
     tooltipcntx: { onPrev, onNext, onSkip, current, steps },
     duration,
@@ -97,7 +101,7 @@ const WalkthroughTooltip = React.memo(props => {
       >
         <CustomButton
           callback={onSkip}
-          text="Skip"
+          text={skipButtonText}
           buttonStyle={buttons.buttonSkip}
           textStyle={{ fontSize: 12, color: '#7F8C8D' }}
         />
@@ -109,7 +113,7 @@ const WalkthroughTooltip = React.memo(props => {
           {hasPrevious ? (
             <CustomButton
               callback={onPrev}
-              text="Previous"
+              text={prevButtonText}
               buttonStyle={buttons.buttonPrev}
               textStyle={{ fontSize: 12, color: '#27AE60' }}
             />
@@ -119,7 +123,7 @@ const WalkthroughTooltip = React.memo(props => {
             style={{
               justifyContent: 'center'
             }}
-            text={current < steps ? `Next (${current}/${steps})` : 'Finish'}
+            text={current < steps ? (typeof nextButtonText === 'function' ? nextButtonText(current, steps) : nextButtonText) : finishButtonText}
             buttonStyle={buttons.buttonNext}
             textStyle={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}
           />

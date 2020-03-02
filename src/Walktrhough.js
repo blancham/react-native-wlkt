@@ -39,7 +39,11 @@ const defOpts = {
     placement: { value: null, valid: v => tooltipPlacement.includes(v) },
     offsetCenter: { value: 0, valid: v => typeof v === 'number' },
     offset: { value: 20, valid: v => typeof v === 'number' },
-    tooltipComponent: { value: null }
+    tooltipComponent: { value: null },
+    skipButtonText: { value: "Skip", valid: v => typeof v === 'string' },
+    prevButtonText: { value: "Previous", valid: v => typeof v === 'string' },
+    nextButtonText: { value: (current, steps) => `Next (${current}/${steps})`, valid: ['string', 'function'].includes(typeof v) },
+    finishButtonText: { value: "Finish", valid: v => typeof v === 'string' }
   }
 };
 

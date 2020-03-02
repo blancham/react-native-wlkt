@@ -238,6 +238,18 @@ Offset between the component and the tooltip.
 **tooltipOptions.tooltipComponent** {ReactNode} > `null` <br>
 Component to display instead of the default tooltip. _(see [Custom Tooltip](#custom-tooltip))_
 
+**tooltipOptions.nextButtonText** {string or function(current: number, steps: number): string} > `` (current, steps) => `Next (${current}/${steps})` ``<br>
+Text for "Next" button. You may either provide the string directly or provide a function that receives two numbers (the current step as first argument and the total number of steps) and returns a string.
+
+**tooltipOptions.prevButtonText** {string} > `Previous`<br>
+Text for "Previous" button.
+
+**tooltipOptions.skipButtonText** {string} > `Skip`<br>
+Text for "Skip" button.
+
+**tooltipOptions.finishButtonText** {string} > `Finish`<br>
+Text for "Finish" button.
+
 ## Custom Tooltip
 
 Your custom component will receive props from the `Walkthrough` :
