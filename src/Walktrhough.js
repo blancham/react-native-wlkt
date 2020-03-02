@@ -42,7 +42,7 @@ const defOpts = {
     tooltipComponent: { value: null },
     skipButtonText: { value: "Skip", valid: v => typeof v === 'string' },
     prevButtonText: { value: "Previous", valid: v => typeof v === 'string' },
-    nextButtonText: { value: (current, steps) => `Next (${current}/${steps})`, valid: ['string', 'function'].includes(typeof v) },
+    nextButtonText: { value: (current, steps) => `Next (${current}/${steps})`, valid: v => ['string', 'function'].includes(typeof v) },
     finishButtonText: { value: "Finish", valid: v => typeof v === 'string' }
   }
 };
