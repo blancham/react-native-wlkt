@@ -4,15 +4,9 @@ import { View, Text, Button } from 'react-native';
 const CustomTooltip = props => {
   const {
     tooltip: { top, left },
-    tooltipopts: {
-      width,
-      height,
-      borderRadius,
-      backgroundColor,
-      fontSize,
-      content,
-    },
-    tooltipcntx: { onPrev, onNext, onSkip, current, steps },
+    content,
+    tooltipopts: { width, height, borderRadius, backgroundColor, fontSize },
+    tooltipcntx: { onPrev, onNext, onSkip, current, steps }
   } = props;
 
   const hasPrevious = current > 1;
@@ -26,21 +20,24 @@ const CustomTooltip = props => {
         height,
         borderRadius,
         backgroundColor,
-        padding: 10,
-      }}>
+        padding: 10
+      }}
+    >
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ fontSize }}>{content}</Text>
       </View>
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}>
+          justifyContent: 'space-between'
+        }}
+      >
         <Button onPress={onSkip} title="Skip" />
         <View
           style={{
-            flexDirection: 'row',
-          }}>
+            flexDirection: 'row'
+          }}
+        >
           {hasPrevious ? <Button onPress={onPrev} title="Previous" /> : null}
           <Button
             onPress={onNext}

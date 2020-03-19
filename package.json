@@ -4,7 +4,11 @@
   "description": "Simple and fully customizable walkthrough guide for your app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "example:setup": "yarn --cwd example setup",
+    "jest:test": "yarn --cwd example test",
+    "detox:test": "detox test -c ios.sim.release",
+    "detox:build": "detox build -c ios.sim.release",
+    "detox:ci": "yarn run detox:build && yarn run detox:test --cleanup"
   },
   "repository": {
     "type": "git",
@@ -31,24 +35,46 @@
   ],
   "author": "Maxime Blanchard",
   "license": "MIT",
+  "dependencies": {
+    "prop-types": "^15.6.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/runtime": "^7.3.4",
     "babel-eslint": "^10.0.1",
-    "babel-jest": "^24.5.0",
+    "detox": "^16.0.0",
     "eslint": "^5.15.2",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.12.4",
-    "jest": "^24.5.0",
-    "metro-react-native-babel-preset": "^0.53.1",
-    "react-test-renderer": "16.8.3"
+    "jest": "^25.1.0"
   },
   "peerDependencies": {
-    "prop-types": "^15.6.1",
-    "react": "^16.9.0",
-    "react-native": "^0.61.4"
+    "react": "*",
+    "react-native": "*"
+  },
+  "detox": {
+    "configurations": {
+      "ios.sim.debug": {
+        "binaryPath": "example/ios/build/Build/Products/Debug-iphonesimulator/example.app",
+        "build": "set -o pipefail; xcodebuild -workspace example/ios/example.xcworkspace -scheme example -configuration Debug -sdk iphonesimulator -derivedDataPath example/ios/build",
+        "type": "ios.simulator",
+        "device": {
+          "type": "iPhone 8 Plus"
+        }
+      },
+      "ios.sim.release": {
+        "binaryPath": "example/ios/build/Build/Products/Release-iphonesimulator/example.app",
+        "build": "export RCT_NO_LAUNCH_PACKAGER=true; set -o pipefail; xcodebuild -workspace example/ios/example.xcworkspace -scheme example -configuration Release -sdk iphonesimulator -derivedDataPath example/ios/build",
+        "type": "ios.simulator",
+        "device": {
+          "type": "iPhone 8 Plus"
+        }
+      }
+    },
+    "runner-config": "example/e2e/config.json",
+    "test-runner": "jest"
   }
 }

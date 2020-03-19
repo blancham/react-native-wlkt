@@ -1,0 +1,47 @@
+name: Continuous Integration
+
+on: [push]
+
+jobs:
+  test_jest:
+    name: Run with Jest
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install Dependencies
+        run: |
+          yarn install
+          yarn run example:setup
+
+      - name: Run Tests
+        run: yarn run jest:test
+
+  test_detox:
+    name: Run with Detox
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install Detox, React-Native
+        run: |
+          brew tap wix/brew
+          brew install applesimutils
+          yarn global add detox-cli
+          yarn global add react-native-cli
+
+      - name: Install Dependencies
+        run: |
+          yarn install
+          yarn run example:setup
+
+      - name: Run Tests
+        run: yarn run detox:ci
