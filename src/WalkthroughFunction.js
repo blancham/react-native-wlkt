@@ -121,18 +121,31 @@ const formatOptions = (options = {}, defaultOptions) => {
     ) {
       newOptions[key] = formatOptions(options[key], defaultOptions[key]);
     } else {
-      newOptions[key] =
-        ifAvailable(defaultOptions[key].valid, options[key]) &&
-        options[key] !== undefined
-          ? options[key]
-          : defaultOptions[key].value;
+      const otype = typeof options[key];
+      const dtype =
+        typeof defaultOptions[key].type === 'string'
+          ? [defaultOptions[key].type]
+          : defaultOptions[key].type;
+
+      newOptions[key] = defaultOptions[key].value;
+      if (
+        options[key] !== undefined &&
+        dtype instanceof Array &&
+        dtype.length > 0
+      )
+        if (dtype.includes('any') || dtype.includes(otype))
+          if (ifAvailable(defaultOptions[key].valid, options[key]))
+            newOptions[key] = options[key];
     }
   });
   return newOptions;
 };
 
 const validScenario = scenario =>
-  scenario !== null && scenario !== undefined && scenario.length > 0;
+  scenario instanceof Array &&
+  scenario !== null &&
+  scenario !== undefined &&
+  scenario.length > 0;
 
 const mergeScenario = (originalScenario, newScenario, step) => {
   const scenario = [

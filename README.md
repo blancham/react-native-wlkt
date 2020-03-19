@@ -8,15 +8,15 @@ Create amazing guides to help new users discovering your masterpiece :wink:
 
 ## **Introduction**
 
-React-Native-Walkthrough is a library I started working on 6 month ago when I had spare time. I chose to develop it because I was looking for an easy to setup and highly customizable library to guide new users on my apps. 
+React-Native-Walkthrough is a library I started working on 6 month ago when I had spare time. I chose to develop it because I was looking for an easy to setup and highly customizable library to guide new users on my apps.
 
 As you can see on the demo, the component stays inside the parent we gave him. Also, everything is dynamically computed to allow an accurate placement of the spotlight or the tooltip.
 
 ## **Demo**
 
 <p align="center">
-  <img src="https://media.giphy.com/media/H1qzxPLSAxxcMceFwE/giphy.gif" alt="React Native Copilot" />
-  <img src="https://media.giphy.com/media/KCYqV8saCZU7IlmNte/giphy.gif" alt="React Native Copilot" />
+  <img src="./assets/wlkt_demo.gif" alt="React Native Copilot" />
+  <img src="./assets/wlkt_demo_2.gif" alt="React Native Copilot" />
 </p>
 
 ## **Install**
@@ -161,6 +161,9 @@ _You can find everything we did so far in `examples/Example.js`_.
 **component** {string} > `null` <br>
 The registered component you wish to be highlighted.
 
+**content** {string, function} > `''` <br>
+Content of the tooltip. _(message to be displayed)_
+
 **onNextIn** {function} > `null` <br>
 Callback triggered when entering a step forward.
 
@@ -206,14 +209,23 @@ Callback triggered when clicking the overlay.
 
 ### _tooltipOptions_
 
+**tooltipOptions.text.previous** {string, function} > `Previous` <br>
+Text for 'Previous' button.
+
+**tooltipOptions.text.next** {string, function} > `` ({ current, steps }) => `Next (${current}/${steps})` `` <br>
+Text for 'Next' button.
+
+**tooltipOptions.text.finish** {string, function} > `Finish` <br>
+Text for 'Finish' button.
+
+**tooltipOptions.text.skip** {string, function} > `Skip` <br>
+Text for 'Skip' button.
+
 **tooltipOptions.height** {number} > `100` <br>
 Height of the tooltip.
 
 **tooltipOptions.width** {number} > `230` <br>
 Width of the tooltip.
-
-**tooltipOptions.content** {string} > `''` <br>
-Content of the tooltip. _(message to be displayed)_
 
 **tooltipOptions.borderRadius** {number} > `10` <br>
 Radius of the tooltip border.

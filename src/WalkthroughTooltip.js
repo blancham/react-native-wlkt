@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { View, Animated } from 'react-native';
-import { CustomText, CustomButton } from './WalkthroughCustoms';
+import { View, Text, Animated } from 'react-native';
+import { CustomButton } from './WalkthroughCustoms';
 
 import { compare } from './WalkthroughFunction';
 
@@ -20,24 +20,21 @@ const buttons = {
   }
 };
 
-const areEqual = (pprops, nprops) =>
-  compare(pprops.tooltip, nprops.tooltip) &&
-  compare(pprops.tooltipopts, nprops.tooltipopts);
-
-const WalkthroughTooltip = React.memo(props => {
+const WalkthroughDefaultTooltip = props => {
   const animation = {
     springValue: new Animated.Value(0),
     opacityValue: new Animated.Value(0)
   };
   const {
     tooltip: { top, left },
+    content,
     tooltipopts: {
+      text,
       width,
       height,
       borderRadius,
       backgroundColor,
-      fontSize,
-      content
+      fontSize
     },
     tooltipcntx: { onPrev, onNext, onSkip, current, steps },
     duration,
@@ -82,12 +79,12 @@ const WalkthroughTooltip = React.memo(props => {
       }}
     >
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <CustomText
+        <Text
           numberOfLines={height / 20}
           style={{ fontSize, lineHeight: 20, textAlign: 'center' }}
         >
           {content}
-        </CustomText>
+        </Text>
       </View>
       <View
         style={{
@@ -97,7 +94,7 @@ const WalkthroughTooltip = React.memo(props => {
       >
         <CustomButton
           callback={onSkip}
-          text="Skip"
+          text={text.skip}
           buttonStyle={buttons.buttonSkip}
           textStyle={{ fontSize: 12, color: '#7F8C8D' }}
         />
@@ -109,7 +106,7 @@ const WalkthroughTooltip = React.memo(props => {
           {hasPrevious ? (
             <CustomButton
               callback={onPrev}
-              text="Previous"
+              text={text.previous}
               buttonStyle={buttons.buttonPrev}
               textStyle={{ fontSize: 12, color: '#27AE60' }}
             />
@@ -119,13 +116,47 @@ const WalkthroughTooltip = React.memo(props => {
             style={{
               justifyContent: 'center'
             }}
-            text={current < steps ? `Next (${current}/${steps})` : 'Finish'}
+            text={current < steps ? text.next : text.finish}
             buttonStyle={buttons.buttonNext}
             textStyle={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}
           />
         </View>
       </View>
     </Animated.View>
+  );
+};
+
+const areEqual = (pprops, nprops) =>
+  compare(pprops.tooltip, nprops.tooltip) &&
+  compare(pprops.tooltipopts, nprops.tooltipopts);
+
+const WalkthroughTooltip = React.memo(props => {
+  const {
+    animated,
+    duration,
+    tooltip,
+    content,
+    tooltipopts: { tooltipComponent, ...tooltipopts },
+    tooltipcntx
+  } = props;
+  return tooltipComponent ? (
+    React.createElement(tooltipComponent, {
+      animated,
+      duration,
+      tooltip,
+      content,
+      tooltipopts,
+      tooltipcntx
+    })
+  ) : (
+    <WalkthroughDefaultTooltip
+      animated={animated}
+      duration={duration}
+      tooltip={tooltip}
+      content={content}
+      tooltipopts={tooltipopts}
+      tooltipcntx={tooltipcntx}
+    />
   );
 }, areEqual);
 

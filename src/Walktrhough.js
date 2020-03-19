@@ -11,39 +11,52 @@ import {
 } from './WalkthroughFunction';
 
 const defOpts = {
-  component: { value: null, valid: v => typeof v === 'string' },
-  onNextIn: { value: null, valid: v => typeof v === 'function' },
-  onNextOut: { value: null, valid: v => typeof v === 'function' },
-  onPrevIn: { value: null, valid: v => typeof v === 'function' },
-  onPrevOut: { value: null, valid: v => typeof v === 'function' },
+  component: { value: null, type: 'string' },
+  content: { value: '', type: ['string', 'function'] },
+  onNextIn: { value: null, type: 'function' },
+  onNextOut: { value: null, type: 'function' },
+  onPrevIn: { value: null, type: 'function' },
+  onPrevOut: { value: null, type: 'function' },
   spotlightOptions: {
-    borderWidth: { value: 0, valid: v => v >= 0 },
-    borderRadius: { value: 0, valid: v => v >= 0 },
-    borderColor: { value: 'orange', valid: v => typeof v === 'string' },
-    padding: { value: 0, valid: v => v >= 0 },
-    clickThrough: { value: false, valid: v => typeof v === 'boolean' }
+    borderWidth: { value: 0, type: 'number', valid: v => v >= 0 },
+    borderRadius: { value: 0, type: 'number', valid: v => v >= 0 },
+    borderColor: { value: 'orange', type: 'string' },
+    padding: { value: 0, type: 'number', valid: v => v >= 0 },
+    clickThrough: { value: false, type: 'boolean' }
   },
   overlayOptions: {
-    backgroundColor: { value: 'black', valid: v => typeof v === 'string' },
-    diagonalBuffer: { value: 10, valid: v => v >= 0 },
-    opacity: { value: 0.8, valid: v => v >= 0 && v <= 1 },
-    onPress: { value: null, valid: v => typeof v === 'function' || v === null }
+    backgroundColor: { value: 'black', type: 'string' },
+    diagonalBuffer: { value: 10, type: 'number', valid: v => v >= 0 },
+    opacity: { value: 0.8, type: 'number', valid: v => v >= 0 && v <= 1 },
+    onPress: { value: null, type: 'function' }
   },
   tooltipOptions: {
-    height: { value: 100, valid: v => v > 0 },
-    width: { value: 230, valid: v => v > 0 },
-    content: { value: '', valid: v => typeof v === 'string' },
-    borderRadius: { value: 10, valid: v => v >= 0 },
-    backgroundColor: { value: 'white', valid: v => typeof v === 'string' },
-    fontSize: { value: 15, valid: v => v >= 0 },
-    placement: { value: null, valid: v => tooltipPlacement.includes(v) },
-    offsetCenter: { value: 0, valid: v => typeof v === 'number' },
-    offset: { value: 20, valid: v => typeof v === 'number' },
-    tooltipComponent: { value: null }
+    text: {
+      previous: { value: 'Previous', type: ['string', 'function'] },
+      next: {
+        value: ({ current, steps }) => `Next (${current}/${steps})`,
+        type: ['string', 'function']
+      },
+      finish: { value: 'Finish', type: ['string', 'function'] },
+      skip: { value: 'Skip', type: ['string', 'function'] }
+    },
+    height: { value: 100, type: 'number', valid: v => v > 0 },
+    width: { value: 230, type: 'number', valid: v => v > 0 },
+    borderRadius: { value: 10, type: 'number', valid: v => v >= 0 },
+    backgroundColor: { value: 'white', type: 'string' },
+    fontSize: { value: 15, type: 'number', valid: v => v >= 0 },
+    placement: {
+      value: null,
+      type: 'string',
+      valid: v => tooltipPlacement.includes(v)
+    },
+    offsetCenter: { value: 0, type: 'number' },
+    offset: { value: 20, type: 'number' },
+    tooltipComponent: { value: null, type: 'any' }
   }
 };
 
-class WalkthroughComponent extends Component {
+class Walkthrough extends Component {
   constructor(props) {
     super(props);
 
@@ -130,13 +143,10 @@ class WalkthroughComponent extends Component {
 }
 
 const walkthroughRef = React.createRef();
-const Walkthrough = props => (
-  <WalkthroughComponent ref={walkthroughRef} {...props} />
-);
 
 const startWalkthrough = ({ scenario }) => {
   if (walkthroughRef.current) walkthroughRef.current.launch({ scenario });
 };
 
 export { startWalkthrough };
-export default Walkthrough;
+export default props => <Walkthrough ref={walkthroughRef} {...props} />;

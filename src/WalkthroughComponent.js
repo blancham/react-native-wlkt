@@ -11,7 +11,7 @@ const WalkthroughComponent = ({ children, id, ...props }) =>
     ref: reference => {
       _components[id] = reference;
     },
-    ...props,
+    ...props
   });
 
 export { WalkthroughComponent, getComponents };

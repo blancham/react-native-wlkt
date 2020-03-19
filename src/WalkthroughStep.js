@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect, useCallback } from 'react';
-import { View, Button } from 'react-native';
+import { View } from 'react-native';
 import WalkthroughOverlay from './WalkthroughOverlay';
 import WalkthroughTooltip from './WalkthroughTooltip';
 import { getComponents } from './WalkthroughComponent';
@@ -11,7 +11,7 @@ class WalkthroughStep extends Component {
     this.settings = null;
     this.state = {
       layout: null,
-      selfLayout: null,
+      selfLayout: null
     };
   }
 
@@ -37,7 +37,7 @@ class WalkthroughStep extends Component {
     const { padding = 0 } = step.spotlightOptions || {};
 
     const measurements = await measureAsync({
-      component: getComponents()[step.component],
+      component: getComponents()[step.component]
     });
 
     const layout = measurements &&
@@ -45,7 +45,7 @@ class WalkthroughStep extends Component {
         x: measurements.x - selfLayout.x - padding / 2,
         y: measurements.y - selfLayout.y - padding / 2,
         width: measurements.width + padding,
-        height: measurements.height + padding,
+        height: measurements.height + padding
       };
 
     return layout;
@@ -67,21 +67,21 @@ class WalkthroughStep extends Component {
     const { selfLayout } = this.state;
     const {
       step: {
-        tooltipOptions: { width, height },
-      },
+        tooltipOptions: { width, height }
+      }
     } = this.props;
 
     const placement = tooltipPlacement.find(p => {
       const tooltip = {
         height,
         width,
-        ...this.getTooltipPosition(p),
+        ...this.getTooltipPosition(p)
       };
       const box = {
         height: selfLayout.height,
         width: selfLayout.width,
         top: selfLayout.y,
-        left: selfLayout.x,
+        left: selfLayout.x
       };
       return this.fitInBox(tooltip, box);
     });
@@ -93,8 +93,8 @@ class WalkthroughStep extends Component {
     const { layout, selfLayout } = this.state;
     const {
       step: {
-        tooltipOptions: { width, height, offset, offsetCenter },
-      },
+        tooltipOptions: { width, height, offset, offsetCenter }
+      }
     } = this.props;
     const tooltipPosition = {};
 
@@ -171,22 +171,39 @@ class WalkthroughStep extends Component {
 
   createTooltipOptions = () => {
     const {
-      step: { tooltipOptions },
+      context: { current, steps },
+      step: {
+        content,
+        tooltipOptions,
+        tooltipOptions: { text }
+      }
     } = this.props;
     let { placement } = tooltipOptions;
 
     if (placement === null) placement = this.findPlacement();
 
+    const getTextContext = value =>
+      typeof value === 'function' ? value({ current, steps }) : value;
+
     return {
       tooltip: { ...this.getTooltipPosition(placement) },
-      tooltipOptions,
+      content: typeof content === 'function' ? content() : content,
+      tooltipOptions: {
+        ...tooltipOptions,
+        text: {
+          previous: getTextContext(text.previous),
+          next: getTextContext(text.next),
+          finish: getTextContext(text.finish),
+          skip: getTextContext(text.skip)
+        }
+      }
     };
   };
 
   createSpotlightOptions = () => {
     const { layout } = this.state;
     const {
-      step: { spotlightOptions, overlayOptions },
+      step: { spotlightOptions, overlayOptions }
     } = this.props;
 
     return {
@@ -194,36 +211,27 @@ class WalkthroughStep extends Component {
         top: layout.y,
         left: layout.x,
         height: layout.height,
-        width: layout.width,
+        width: layout.width
       },
       spotlightOptions,
-      overlayOptions,
+      overlayOptions
     };
   };
 
   render() {
     const { layout, selfLayout } = this.state;
     const {
-      context: { steps, current, onPrev, onNext, onSkip },
-      step: {
-        tooltipOptions: { tooltipComponent },
-      },
+      context: { steps, current, onPrev, onNext, onSkip }
     } = this.props;
 
     const options = layout && {
       spotlight: {
-        ...this.createSpotlightOptions(),
+        ...this.createSpotlightOptions()
       },
       tooltip: {
-        ...this.createTooltipOptions(),
+        ...this.createTooltipOptions()
       },
-      context: {
-        onPrev,
-        onNext,
-        onSkip,
-        steps,
-        current,
-      },
+      context: { onPrev, onNext, onSkip, steps, current }
     };
 
     return (
@@ -234,10 +242,11 @@ class WalkthroughStep extends Component {
         }}
         onLayout={async () => {
           this.setState({
-            selfLayout: await measureAsync({ component: this.self }),
+            selfLayout: await measureAsync({ component: this.self })
           });
         }}
-        pointerEvents="box-none">
+        pointerEvents="box-none"
+      >
         {options && selfLayout ? (
           <View style={{ flex: 1 }} pointerEvents="box-none">
             <WalkthroughOverlay
@@ -248,21 +257,14 @@ class WalkthroughStep extends Component {
               overlayopts={options.spotlight.overlayOptions}
               overlaycntx={options.context}
             />
-            {tooltipComponent ? (
-              React.createElement(tooltipComponent, {
-                tooltip: options.tooltip.tooltip,
-                tooltipopts: options.tooltip.tooltipOptions,
-                tooltipcntx: options.context,
-              })
-            ) : (
-              <WalkthroughTooltip
-                animated
-                duration={750}
-                tooltip={options.tooltip.tooltip}
-                tooltipopts={options.tooltip.tooltipOptions}
-                tooltipcntx={options.context}
-              />
-            )}
+            <WalkthroughTooltip
+              animated
+              duration={750}
+              tooltip={options.tooltip.tooltip}
+              content={options.tooltip.content}
+              tooltipopts={options.tooltip.tooltipOptions}
+              tooltipcntx={options.context}
+            />
           </View>
         ) : null}
       </View>
